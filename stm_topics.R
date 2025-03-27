@@ -7,11 +7,25 @@
 # la ilusión se mira. Homenaje a Pilar Celma Valero#
 # y Javier Blasco Pacual. Valladolid, Universidad  #
 # Valladolid, 2025.                                #
+# Desarrolado en el proyecto 7PartidasDigital.     #
+# AEI PID2020-112621GB-I00/10.13039/501100011033   #
+# https://7partidas.hypotheses.org/                #
 ####################################################
 
+# Cargar las librería necesarias
 library(tidyverse)
 library(tidytext)
 library(stm)
+
+# Esta tabla se ha generado a partir del análisis 
+# automártico (PoSTagging) llevado a  cabo con el
+# analizador desarrollado para el Old Spanish
+# Textual Archive (OSTA)
+# https://oldspanishtextualarchive.org/
+# a partir de la transcripción electrónica del texto
+# de la editio princeps de las Siete Partidas (Sevilla,
+# 1491)
+
 partidas_tabla <- read_tsv("IOC-POS-tabla.txt")
 
 partidas_sparse <- partidas_tabla %>%
@@ -26,7 +40,7 @@ dim(partidas_sparse)
 set.seed(1234)
 topic_model <- stm(partidas_sparse, K = 16, verbose = FALSE) # el valor de K es el que deterimina nº tópicos
 
-# Muestra en la conssola las n primera palabras de cada tópico
+# Muestra en la consola las n primera palabras de cada tópico
 labelTopics(topic_model, n = 10)
 
 partidas_gamma <- tidy(
@@ -35,7 +49,7 @@ partidas_gamma <- tidy(
   document_names = rownames(partidas_sparse)
 ) 
 
-# Imprimer los gráficos de bigotes con
+# Imprime los gráficos de bigotes con
 partidas_gamma %>% 
   left_join(
     partidas_tabla %>% 
